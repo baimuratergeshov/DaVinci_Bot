@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/chat :: layout(~{::title}, ~{::div.app-main})}">
+<head>
+    <title th:text="${conversation.titre} + ' - DaVinci Bot'">Conversation - DaVinci Bot</title>
+</head>
+<body>
+<div class="app-main" style="height:100vh">
+    <div class="chat-head">
+        <h1 th:text="${conversation.titre}">Titre</h1>
+        <div class="small text-secondary">Modèle de la conversation :
+            <span class="dv-badge provider ms-1" th:text="${conversation.modele + ' · ' + conversation.fournisseur}">Gemini Flash · Google</span>
+        </div>
+    </div>
+    <div class="messages">
+        <div th:each="m : ${messages}" th:remove="tag">
+            <div th:if="${m.utilisateur}" class="msg-user" th:text="${m.contenu}">Question</div>
+            <div th:unless="${m.utilisateur}" class="msg-bot">
+                <span class="avatar">D</span>
+                <div class="bubble"><p th:each="l : ${m.lignes}" th:utext="${l}">Réponse</p></div>
+            </div>
+        </div>
+    </div>
+    <form class="chat-input" method="post" onsubmit="return false">
+        <input type="text" class="form-control" placeholder="Écris ton message…" aria-label="Message">
+        <button class="btn btn-primary px-4" type="submit">Envoyer</button>
+    </form>
+</div>
+</body>
+</html>

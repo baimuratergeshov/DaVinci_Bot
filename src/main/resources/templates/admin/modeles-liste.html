@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::main}, 'modeles')}">
+<head><title>Modèles d'IA - Administration</title></head>
+<body>
+<main class="page">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+            <h1 class="page-title">Modèles d’IA</h1>
+            <p class="page-sub">Gère les modèles disponibles dans le chatbot.</p>
+        </div>
+        <a class="btn btn-primary" th:href="@{/admin/modeles/nouveau}">+ Nouveau modèle</a>
+    </div>
+    <div class="dv-card overflow-hidden">
+        <table class="dv-table">
+            <thead><tr>
+                <th class="text-start">Modèle</th><th class="text-start">Fournisseur</th>
+                <th class="text-start">Identifiant technique</th><th class="text-start">Statut</th><th class="text-end">Actions</th>
+            </tr></thead>
+            <tbody>
+            <tr th:each="m : ${modeles}">
+                <td>
+                    <div class="d-flex align-items-center gap-3">
+                        <img class="model-logo" th:src="@{${m.logo}}" width="36" height="36" alt="">
+                        <strong th:text="${m.nom}">Gemini Flash</strong>
+                    </div>
+                </td>
+                <td th:text="${m.fournisseur}">Google</td>
+                <td class="mono" th:text="${m.identifiant}">gemini-flash</td>
+                <td><span class="dv-badge" th:classappend="${m.actif} ? 'ok' : 'off'" th:text="${m.actif} ? 'Actif' : 'Inactif'">Actif</span></td>
+                <td class="text-end dv-actions">
+                    <a th:href="@{/admin/modeles/{id}(id=${m.id})}">Voir</a>
+                    <a th:href="@{/admin/modeles/{id}/modifier(id=${m.id})}">Modifier</a>
+                    <a class="danger" href="#">Supprimer</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="dv-table-foot" th:text="${#lists.size(modeles)} + ' modèles affichés'">5 modèles affichés</div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/admin :: layout(~{::title}, ~{::main}, 'modeles')}">
+<head><title th:text="${titre} + ' - Administration'">Modèle - Administration</title></head>
+<body>
+<main class="page">
+    <div class="mb-4 pt-3">
+        <h1 class="page-title" th:text="${titre}">Nouveau modèle d’IA</h1>
+        <p class="page-sub" th:text="${sousTitre}">Ajoute un modèle disponible pour les conversations.</p>
+    </div>
+    <form class="dv-card dv-sheet" method="post" onsubmit="return false">
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <label class="form-label" for="nom">Nom du modèle</label>
+                <input class="form-control" id="nom" name="nom" placeholder="Ex. Gemini Flash" th:value="${modele?.nom}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="fournisseur">Fournisseur</label>
+                <select class="form-select" id="fournisseur" name="fournisseur" required>
+                    <option value="" th:selected="${modele == null}" disabled>Choisir un fournisseur</option>
+                    <option th:each="f : ${fournisseurs}" th:value="${f}" th:text="${f}" th:selected="${modele != null and modele.fournisseur == f}"></option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="identifiant">Identifiant technique (utilisé par l’API)</label>
+                <input class="form-control" id="identifiant" name="identifiant" placeholder="Ex. gemini-flash" th:value="${modele?.identifiant}" required>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="urlApi">URL de l’API</label>
+                <input class="form-control" id="urlApi" name="urlApi" placeholder="https://..." th:value="${modele?.urlApi}" required>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label class="form-label" for="description">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="4"
+                      placeholder="Décris le modèle en une ou deux phrases" th:text="${modele?.description}"></textarea>
+        </div>
+        <div class="mb-4">
+            <label class="form-label">Logo</label>
+            <div th:if="${modele == null}" class="dropzone">
+                <strong>Glisse une image ici</strong>
+                <small class="text-secondary d-block mb-2">PNG ou SVG, de préférence carré</small>
+                <label class="btn btn-outline-primary mb-0">Importer un logo
+                    <input type="file" name="logo" accept="image/png,image/svg+xml" hidden></label>
+            </div>
+            <div th:if="${modele != null}" class="d-flex align-items-center gap-3">
+                <img class="model-logo" th:src="@{${modele.logo}}" width="56" height="56" alt="">
+                <div class="flex-grow-1 lh-sm"><span th:text="${'logo-' + modele.identifiant + '.png'}">logo.png</span><br><small class="text-secondary">Logo actuel</small></div>
+                <label class="btn btn-outline-primary mb-0">Changer le logo
+                    <input type="file" name="logo" accept="image/png,image/svg+xml" hidden></label>
+            </div>
+        </div>
+        <div class="form-check form-switch mb-4">
+            <input class="form-check-input" type="checkbox" role="switch" id="actif" name="actif"
+                   th:checked="${modele == null or modele.actif}">
+            <label class="form-check-label" for="actif">Modèle actif (visible dans la liste des modèles du chatbot)</label>
+        </div>
+        <div class="d-flex justify-content-end gap-2">
+            <a class="btn btn-outline-primary" th:href="@{/admin/modeles}">Annuler</a>
+            <button type="submit" class="btn btn-primary" th:text="${bouton}">Créer le modèle</button>
+        </div>
+    </form>
+</main>
+</body>
+</html>

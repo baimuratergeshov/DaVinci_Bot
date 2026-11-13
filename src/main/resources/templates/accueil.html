@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base :: layout(~{::title}, ~{::main})}">
+<head>
+    <title>Accueil - DaVinci Bot</title>
+</head>
+<body>
+<main class="container flex-grow-1 py-4">
+    <section class="hero text-center py-5">
+        <img th:src="@{/img/logo.svg}" alt="Logo DaVinci Bot" height="96" class="mb-3">
+        <h1 class="display-5">Bienvenue sur DaVinci Bot</h1>
+        <p class="lead">Votre assistant conversationnel, propulsé par l'IA.</p>
+        <a class="btn btn-primary btn-lg" th:href="@{/login}">Se connecter</a>
+    </section>
+</main>
+</body>
+</html>

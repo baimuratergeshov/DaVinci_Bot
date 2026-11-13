@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Connexion - DaVinci Bot</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/logo.svg}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Poppins:wght@600&amp;display=swap">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<main class="login-page">
+    <span class="deco a"></span><span class="deco b"></span>
+    <div class="login-card">
+        <div class="mb-4"><div th:replace="~{fragments/logo :: complet}"></div></div>
+        <h1 class="h3 fw-semibold mb-1">Connexion</h1>
+        <p class="text-secondary small mb-4">Connecte-toi pour discuter avec les modèles d’IA du lycée.</p>
+        <!-- Formulaire non fonctionnel pour le moment -->
+        <form method="post" th:action="@{/login}" onsubmit="return false">
+            <div class="mb-3">
+                <label for="email" class="form-label">Adresse e-mail</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="prenom.nom@lycee.fr" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="••••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100 py-2">Se connecter</button>
+        </form>
+        <p class="text-center text-secondary small mt-4 mb-0">Accès réservé aux élèves et enseignants.</p>
+    </div>
+</main>
+</body>
+</html>

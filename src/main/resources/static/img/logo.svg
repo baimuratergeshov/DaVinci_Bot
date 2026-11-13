@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="262 242 500 540" width="500" height="540" role="img" aria-label="DaVinci Bot">
+  <defs>
+    <mask id="bulle" maskUnits="userSpaceOnUse" x="262" y="242" width="500" height="540">
+      <rect x="262" y="242" width="500" height="540" fill="#fff"/>
+      <path d="M395 373H512A118 138 0 0 1 522 649L449 712V650H395Z" fill="#000"/>
+    </mask>
+  </defs>
+  <g mask="url(#bulle)">
+    <path d="M335 255H512V768H335A60 60 0 0 1 275 708V315A60 60 0 0 1 335 255Z" fill="#3F3FC8"/>
+    <path d="M512 255A236 256 0 0 1 512 768Z" fill="#4DAEE8"/>
+  </g>
+</svg>

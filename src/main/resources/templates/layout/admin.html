@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- Mise en page admin : layout(titre, contenu, menuActif) ; le fil d'Ariane vient du modèle (${fil}) -->
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(title, content, actif)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:replace="${title}">Administration - DaVinci Bot</title>
+    <link rel="icon" type="image/svg+xml" th:href="@{/img/logo.svg}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Poppins:wght@600&amp;display=swap">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar">
+        <div th:replace="~{fragments/logo :: complet}"></div>
+        <div><span class="dv-badge">Administration</span></div>
+        <nav class="d-flex flex-column gap-1">
+            <a class="side-link" th:classappend="${actif == 'modeles'} ? 'active'" th:href="@{/admin/modeles}">Modèles IA</a>
+            <a class="side-link" th:classappend="${actif == 'fournisseurs'} ? 'active'" href="#">Fournisseurs IA</a>
+            <a class="side-link" th:classappend="${actif == 'utilisateurs'} ? 'active'" href="#">Utilisateurs</a>
+        </nav>
+        <div class="mt-auto d-flex flex-column gap-3">
+            <a class="btn btn-outline-primary text-secondary border-secondary-subtle text-start fw-normal" th:href="@{/chat}">&larr; Retour au chatbot</a>
+            <div class="side-user">
+                <span class="avatar">A</span>
+                <div class="lh-sm"><strong>Admin</strong><br><small><a th:href="@{/login}">Se déconnecter</a></small></div>
+            </div>
+        </div>
+    </aside>
+    <div class="app-main">
+        <div class="topbar">
+            <th:block th:each="l, st : ${fil}">
+                <span th:unless="${st.first}" class="sep">/</span>
+                <a th:if="${l.url != null}" th:href="@{${l.url}}" th:text="${l.libelle}">Administration</a>
+                <span th:if="${l.url == null}" th:text="${l.libelle}">Page</span>
+            </th:block>
+        </div>
+        <main class="page" th:replace="${content}">Contenu</main>
+    </div>
+</div>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
