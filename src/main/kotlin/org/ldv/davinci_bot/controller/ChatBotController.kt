@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable
 @Controller
 class ChatBotController {
 
-    @GetMapping("/")
-    fun accueil(): String = "accueil"
-
     // Formulaire de connexion : affichage uniquement, pas encore fonctionnel
     @GetMapping("/login")
     fun login(): String = "auth/login"

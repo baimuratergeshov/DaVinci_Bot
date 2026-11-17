@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/conversation :: layout(~{::title}, ~{::div.app-main})}">
+
+<head>
+    <title th:text="${conversation != null} ? ${conversation.titre} + ' - DaVinci Bot' : 'Assistant IA - DaVinci Bot'">Assistant IA</title>
+</head>
+
+<body>
+
+<div class="app-main" style="height:100vh">
+
+    <!-- En-tête -->
+    <div class="chat-head">
+        <h1 th:text="${conversation != null} ? ${conversation.titre} : 'Nouvelle conversation'">Titre</h1>
+        <div class="small text-secondary" th:if="${conversation != null}">Modèle de la conversation :
+            <span class="dv-badge provider ms-1"
+                  th:text="${conversation.modeleIA.nom + ' · ' + conversation.modeleIA.fournisseurIA.nom}">Gemini Flash · Google</span>
+        </div>
+    </div>
+
+    <!-- Zone des messages -->
+    <div class="messages" id="messages">
+
+        <!-- Aucune conversation sélectionnée -->
+        <div th:if="${conversation == null}" class="empty-state">
+            <img th:src="@{/img/logo.svg}" alt="" height="56">
+            <h2>Comment puis-je vous aider ?</h2>
+            <p class="text-muted">Choisissez un modèle IA et posez votre question.</p>
+        </div>
+
+        <!-- Historique des messages -->
+        <div th:each="message : ${messages}" th:remove="tag">
+            <div th:if="${message.typeMessage.name() == 'UTILISATEUR'}"
+                 class="msg-user" th:text="${message.contenu}">Question</div>
+            <div th:unless="${message.typeMessage.name() == 'UTILISATEUR'}" class="msg-bot">
+                <img class="bot-avatar" th:src="@{/img/logo.svg}" alt="DaVinci Bot">
+                <div class="bubble message-content markdown" th:text="${message.contenu}">Réponse</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Création d'une conversation -->
+    <form id="formChat" class="chat-input"
+          th:if="${conversation == null}"
+          th:action="@{/conversations}" method="post">
+
+        <select name="idModele" class="form-select model-select" required aria-label="Modèle IA">
+            <option value="" disabled selected>Choisir un modèle IA</option>
+            <option th:each="modele : ${modeles}" th:value="${modele.id}" th:text="${modele.nom}"></option>
+        </select>
+
+        <textarea name="prompt" class="form-control" rows="1"
+                  placeholder="Posez votre question..." aria-label="Message" required></textarea>
+
+        <button class="btn btn-primary px-4" type="submit">Envoyer</button>
+    </form>
+
+    <!-- Conversation existante -->
+    <form class="chat-input" th:if="${conversation != null}"
+          th:action="@{/conversations/{id}/messages(id=${conversation.id})}" method="post">
+
+        <div class="model-current d-flex align-items-center gap-2">
+            <img th:src="@{${conversation.modeleIA.cheminLogo}}" alt="Logo du modèle" width="28" height="28">
+            <span th:text="${conversation.modeleIA.nom}"></span>
+        </div>
+
+        <textarea name="prompt" class="form-control" rows="1"
+                  placeholder="Écrivez votre message..." aria-label="Message" required></textarea>
+
+        <button class="btn btn-primary px-4" type="submit">Envoyer</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+    <script>
+        // Markdown -> HTML, puis assainissement avant insertion (XSS)
+        document.querySelectorAll('.message-content.markdown').forEach(el => {
+            el.innerHTML = DOMPurify.sanitize(marked.parse(el.textContent));
+        });
+        // Défilement en bas de la conversation
+        const zone = document.getElementById('messages');
+        zone.scrollTop = zone.scrollHeight;
+        // Entrée = envoyer, Maj+Entrée = retour à la ligne
+        document.querySelectorAll('.chat-input textarea').forEach(t => {
+            t.addEventListener('keydown', e => {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); t.form.requestSubmit(); }
+            });
+        });
+    </script>
+
+</div>
+
+</body>
+</html>

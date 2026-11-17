@@ -75,5 +75,16 @@ class DataInitializer(
         modeles
             .filterNot { modeleIADAO.existsByNom(it.nom) }
             .forEach { modeleIADAO.save(it) }
+
+        // Corrige les logos des modèles déjà en base (anciens chemins /img/*.png)
+        val existants = modeleIADAO.findAll().associateBy { it.nom }
+        modeles.forEach { seed ->
+            existants[seed.nom]
+                ?.takeIf { it.cheminLogo != seed.cheminLogo }
+                ?.let {
+                    it.cheminLogo = seed.cheminLogo
+                    modeleIADAO.save(it)
+                }
+        }
     }
 }

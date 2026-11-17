@@ -113,3 +113,29 @@ h1, h2, h3, .dv-brand { font-family: Poppins, Inter, system-ui, sans-serif; }
     .app-shell { flex-direction: column; }
     .sidebar, .sidebar.chat { width: 100%; border-right: 0; border-bottom: 1px solid var(--dv-border); }
 }
+
+/* Chat réel : saisie, état vide, Markdown */
+.chat-input { align-items: flex-end; }
+.chat-input textarea { resize: none; max-height: 8rem; field-sizing: content; }
+.chat-input .model-select { width: 220px; flex: none; }
+.chat-input .model-current { flex: none; font-size: .9rem; font-weight: 500; padding: 0 .25rem 0 0; align-self: center; }
+.empty-state { margin: auto; text-align: center; max-width: 420px; }
+.empty-state h2 { font-size: 1.5rem; margin-top: 1rem; }
+.msg-user { white-space: pre-wrap; }
+.msg-bot .bubble { min-width: 0; overflow-wrap: anywhere; }
+.msg-bot .bubble > :last-child { margin-bottom: 0; }
+.msg-bot .bubble p:last-child { color: inherit; }
+.bubble.markdown h1, .bubble.markdown h2, .bubble.markdown h3 { font-size: 1.1rem; margin: 1rem 0 .5rem; }
+.bubble.markdown ul, .bubble.markdown ol { padding-left: 1.4rem; margin-bottom: .6rem; }
+.bubble.markdown pre { background: #1f2433; color: #f5f7fb; padding: .8rem 1rem; border-radius: .6rem; overflow-x: auto; }
+.bubble.markdown code { font-size: .85em; }
+.bubble.markdown :not(pre) > code { background: var(--dv-soft); color: var(--dv-primary); padding: .1rem .35rem; border-radius: .3rem; }
+.bubble.markdown table { border-collapse: collapse; margin-bottom: .6rem; }
+.bubble.markdown th, .bubble.markdown td { border: 1px solid var(--dv-border); padding: .3rem .6rem; }
+.bubble.markdown a { color: var(--dv-primary); }
+@media (max-width: 768px) {
+    .chat-input { flex-wrap: wrap; padding: .8rem 1rem; }
+    .chat-input .model-select { width: 100%; }
+    .chat-input textarea { flex: 1 1 0; }
+}
+.bot-avatar { width: 36px; height: 36px; flex: none; object-fit: contain; }
