@@ -35,6 +35,15 @@ class DataInitializer(
                 )
             )
 
+        val anthropic = fournisseurIADAO.findByNom("Anthropic")
+            ?: fournisseurIADAO.save(
+                FournisseurIA(
+                    nom = "Anthropic",
+                    cheminLogo = "/img/logos/claude.svg",
+                    description = "Modèles d'intelligence artificielle Claude."
+                )
+            )
+
         // Modèles à initialiser
         val modeles = listOf(
             ModeleIA(
@@ -71,6 +80,15 @@ class DataInitializer(
                 description = "Modèle plus avancé pour les tâches complexes.",
                 cheminLogo = "/img/logos/mistral.svg",
                 fournisseurIA = mistral,
+                prompt = PROMPT_PAR_DEFAUT
+            ),
+            ModeleIA(
+                nom = "claude-haiku-5-5",
+                identifiantTechnique = "claude-haiku-5-5",
+                urlApi = "https://api.anthropic.com/v1/messages",
+                description = "Modèle rapide et économique d'Anthropic.",
+                cheminLogo = "/img/logos/claude.svg",
+                fournisseurIA = anthropic,
                 prompt = PROMPT_PAR_DEFAUT
             )
         )

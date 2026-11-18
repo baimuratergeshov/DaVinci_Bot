@@ -13,7 +13,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div class="app-shell">
+<div class="app-shell chat-shell">
     <aside class="sidebar chat">
         <div th:replace="~{fragments/logo :: complet}"></div>
         <a class="btn btn-primary" th:href="@{/}">+ Nouvelle conversation</a>
@@ -32,7 +32,7 @@
             <div class="lh-sm"><strong>Bay</strong><br><small><a th:href="@{/login}">Se déconnecter</a></small></div>
         </div>
     </aside>
-    <div class="app-main" style="height:100vh" th:replace="${content}">Contenu</div>
+    <div class="app-main" th:replace="${content}">Contenu</div>
 </div>
 <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 </body>

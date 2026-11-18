@@ -9,7 +9,7 @@
 
 <body>
 
-<div class="app-main" style="height:100vh">
+<div class="app-main">
 
     <!-- En-tête -->
     <div class="chat-head">
@@ -83,6 +83,31 @@
         // Défilement en bas de la conversation
         const zone = document.getElementById('messages');
         zone.scrollTop = zone.scrollHeight;
+        // Au envoi : affiche tout de suite le message + animation "le bot réfléchit"
+        document.querySelectorAll('.chat-input').forEach(form => {
+            form.addEventListener('submit', () => {
+                const t = form.querySelector('textarea');
+                const texte = t.value.trim();
+                if (!texte || form.dataset.envoye) return;
+                form.dataset.envoye = '1';
+                const empty = zone.querySelector('.empty-state');
+                if (empty) empty.remove();
+                const u = document.createElement('div');
+                u.className = 'msg-user';
+                u.textContent = texte;
+                const b = document.createElement('div');
+                b.className = 'msg-bot';
+                b.innerHTML = '<img class="bot-avatar" src="/img/logo.svg" alt="DaVinci Bot">' +
+                    '<div class="bubble typing" aria-label="Le bot réfléchit"><span></span><span></span><span></span></div>';
+                zone.append(u, b);
+                zone.scrollTop = zone.scrollHeight;
+                // Pas de disabled sur le textarea (il ne serait pas envoyé) : lecture seule
+                t.readOnly = true;
+                // Vide le champ après la construction des données du formulaire
+                setTimeout(() => { t.value = ''; }, 0);
+                form.querySelector('button[type=submit]').disabled = true;
+            });
+        });
         // Entrée = envoyer, Maj+Entrée = retour à la ligne
         document.querySelectorAll('.chat-input textarea').forEach(t => {
             t.addEventListener('keydown', e => {

@@ -38,7 +38,9 @@ class GeminiService(
             ?.let { GeminiContent(parts = listOf(GeminiPart(text = it))) }
         val request = GeminiChatRequest(
             contents = contenus,
-            systemInstruction = instruction
+            systemInstruction = instruction,
+            // Accès à internet via la recherche Google
+            tools = listOf(mapOf("googleSearch" to emptyMap<String, Any>()))
         )
 
         // Étape 3 : Envoi de la requête HTTP POST à l'API
