@@ -4,7 +4,9 @@ import org.ldv.davinci_bot.dto.mistral.IAService
 import org.ldv.davinci_bot.dto.mistral.MistralChatRequest
 import org.ldv.davinci_bot.dto.mistral.MistralChatResponse
 import org.ldv.davinci_bot.dto.mistral.MistralMessage
+import org.ldv.davinci_bot.model.entity.Message
 import org.ldv.davinci_bot.model.entity.ModeleIA
+import org.ldv.davinci_bot.model.entity.TypeMessage
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
@@ -20,18 +22,25 @@ class MistralService(
 ) : IAService {
     override fun getFournisseur(): String = "Mistral"
 
-    override fun envoyerPrompt(prompt: String, modele: ModeleIA): String {
+    override fun envoyerPrompt(historique: List<Message>, modele: ModeleIA): String {
 
-        // Étape 1 : Création du message de l'utilisateur
-        val message = MistralMessage(
-            role = "user",
-            content = prompt
-        )
+        // Étape 1 : Prompt système du modèle, puis historique de la conversation
+        val messages = mutableListOf<MistralMessage>()
+        modele.prompt?.takeIf { it.isNotBlank() }
+            ?.let { messages.add(MistralMessage(role = "system", content = it)) }
+        historique.forEach {
+            messages.add(
+                MistralMessage(
+                    role = if (it.typeMessage == TypeMessage.ASSISTANT) "assistant" else "user",
+                    content = it.contenu
+                )
+            )
+        }
 
         // Étape 2 : Préparation de la requête pour Mistral
         val request = MistralChatRequest(
             model = modele.identifiantTechnique,
-            messages = listOf(message)
+            messages = messages
         )
 
         // Étape 3 : Envoi de la requête HTTP POST à l'API

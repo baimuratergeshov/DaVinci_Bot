@@ -13,7 +13,8 @@ data class ModeleVue(
     val description: String,
     val actif: Boolean,
     val ajouteLe: String,
-    val logo: String
+    val logo: String,
+    val prompt: String = ""
 )
 
 data class ConversationVue(val id: Long, val titre: String, val modele: String, val fournisseur: String)
@@ -26,7 +27,8 @@ object DonneesExemple {
 
     val modeles = listOf(
         ModeleVue(1, "Gemini Flash", "Google", "gemini-flash", "https://generativelanguage.googleapis.com/v1beta",
-            "Modèle rapide, adapté aux questions courantes et aux explications de cours.", true, "10/11/2026", "/img/logos/gemini.svg"),
+            "Modèle rapide, adapté aux questions courantes et aux explications de cours.", true, "10/11/2026", "/img/logos/gemini.svg",
+            "Tu es DaVinci Bot, l’assistant des élèves du lycée. Réponds en français, de façon claire et pédagogique."),
         ModeleVue(2, "Mistral Small", "Mistral AI", "mistral-small", "https://api.mistral.ai/v1",
             "Modèle européen léger, bon pour les résumés.", true, "10/11/2026", "/img/logos/mistral.svg"),
         ModeleVue(3, "GPT Mini", "OpenAI", "gpt-mini", "https://api.openai.com/v1",

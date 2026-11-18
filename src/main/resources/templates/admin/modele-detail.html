@@ -28,6 +28,7 @@
             <div class="info-row"><dt>Identifiant technique</dt><dd th:text="${modele.identifiant}">gemini-flash</dd></div>
             <div class="info-row"><dt>URL de l’API</dt><dd th:text="${modele.urlApi}">https://…</dd></div>
             <div class="info-row"><dt>Description</dt><dd th:text="${modele.description}">Description</dd></div>
+            <div class="info-row"><dt>Prompt système</dt><dd style="white-space: pre-wrap" th:text="${modele.prompt}">Prompt</dd></div>
             <div class="info-row border-bottom"><dt>Ajouté le</dt><dd th:text="${modele.ajouteLe}">10/11/2026</dd></div>
         </dl>
         <button type="button" class="btn btn-danger-soft">Supprimer ce modèle</button>

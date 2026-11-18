@@ -36,6 +36,13 @@
                       placeholder="Décris le modèle en une ou deux phrases" th:text="${modele?.description}"></textarea>
         </div>
         <div class="mb-4">
+            <label class="form-label" for="prompt">Prompt système</label>
+            <textarea class="form-control" id="prompt" name="prompt" rows="5"
+                      placeholder="Ex. Tu es un assistant pédagogique. Réponds en français, de façon claire et concise."
+                      th:text="${modele?.prompt}"></textarea>
+            <div class="form-text">Instructions envoyées au modèle au début de chaque conversation pour cadrer son rôle et son ton.</div>
+        </div>
+        <div class="mb-4">
             <label class="form-label">Logo</label>
             <div th:if="${modele == null}" class="dropzone">
                 <strong>Glisse une image ici</strong>

@@ -79,33 +79,7 @@ class ChatController(
 
         messageDAO.save(messageUtilisateur)
 
-        try {
-            // Sélection automatique du service
-            val iaService = iaServiceFactory.getService(modele)
-
-            // Appel du fournisseur correspondant
-            val reponse = iaService.envoyerPrompt(prompt, modele)
-
-            val messageAssistant = Message(
-                contenu = reponse,
-                dateCreation = LocalDateTime.now(),
-                typeMessage = TypeMessage.ASSISTANT,
-                conversation = conversationEnregistree
-            )
-
-            messageDAO.save(messageAssistant)
-
-        } catch (e: Exception) {
-            println("Erreur lors de l’appel au modèle ${modele.nom} : ${e.message}")
-            messageDAO.save(
-                Message(
-                    contenu = "⚠️ Le modèle n'a pas pu répondre (${e.message}). Réessayez.",
-                    dateCreation = LocalDateTime.now(),
-                    typeMessage = TypeMessage.ASSISTANT,
-                    conversation = conversationEnregistree
-                )
-            )
-        }
+        repondre(conversationEnregistree)
 
         conversationEnregistree.dateDerniereModification = LocalDateTime.now()
         conversationDAO.save(conversationEnregistree)
@@ -158,39 +132,39 @@ class ChatController(
 
         messageDAO.save(messageUtilisateur)
 
-        try {
-            val modele = conversation.modeleIA!!
-
-            // Sélection automatique du service
-            val iaService = iaServiceFactory.getService(modele)
-
-            // Appel du fournisseur correspondant
-            val reponse = iaService.envoyerPrompt(prompt, modele)
-
-            val messageAssistant = Message(
-                contenu = reponse,
-                dateCreation = LocalDateTime.now(),
-                typeMessage = TypeMessage.ASSISTANT,
-                conversation = conversation
-            )
-
-            messageDAO.save(messageAssistant)
-
-        } catch (e: Exception) {
-            println("Erreur lors de l'appel à ${conversation.modeleIA!!.nom} : ${e.message}")
-            messageDAO.save(
-                Message(
-                    contenu = "⚠️ Le modèle n'a pas pu répondre (${e.message}). Réessayez.",
-                    dateCreation = LocalDateTime.now(),
-                    typeMessage = TypeMessage.ASSISTANT,
-                    conversation = conversation
-                )
-            )
-        }
+        repondre(conversation)
 
         conversation.dateDerniereModification = LocalDateTime.now()
         conversationDAO.save(conversation)
 
         return "redirect:/conversations/$id"
+    }
+
+    // Interroge l'IA avec la mémoire de la conversation et enregistre sa réponse
+    private fun repondre(conversation: Conversation) {
+        val modele = conversation.modeleIA
+        val contenu = try {
+            // Mémoire : les derniers messages de la conversation, pour que l'IA se souvienne
+            val historique = messageDAO.findByConversationOrderByIdAsc(conversation)
+                .filter { it.typeMessage != TypeMessage.SYSTEME }
+                .takeLast(TAILLE_MEMOIRE)
+            iaServiceFactory.getService(modele).envoyerPrompt(historique, modele)
+        } catch (e: Exception) {
+            println("Erreur lors de l'appel au modèle ${modele.nom} : ${e.message}")
+            "⚠️ Le modèle n'a pas pu répondre (${e.message}). Réessayez."
+        }
+        messageDAO.save(
+            Message(
+                contenu = contenu,
+                dateCreation = LocalDateTime.now(),
+                typeMessage = TypeMessage.ASSISTANT,
+                conversation = conversation
+            )
+        )
+    }
+
+    companion object {
+        // Nombre maximum de messages renvoyés à l'IA à chaque échange
+        private const val TAILLE_MEMOIRE = 30
     }
 }

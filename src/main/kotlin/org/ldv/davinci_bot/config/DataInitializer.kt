@@ -43,7 +43,8 @@ class DataInitializer(
                 urlApi = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
                 description = "Modèle rapide et polyvalent.",
                 cheminLogo = "/img/logos/gemini.svg",
-                fournisseurIA = gemini
+                fournisseurIA = gemini,
+                prompt = PROMPT_PAR_DEFAUT
             ),
             ModeleIA(
                 nom = "gemini-3.5-flash-lite",
@@ -51,7 +52,8 @@ class DataInitializer(
                 urlApi = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent",
                 description = "Modèle rapide pour les tâches simples.",
                 cheminLogo = "/img/logos/gemini.svg",
-                fournisseurIA = gemini
+                fournisseurIA = gemini,
+                prompt = PROMPT_PAR_DEFAUT
             ),
             ModeleIA(
                 nom = "mistral-small-latest",
@@ -59,7 +61,8 @@ class DataInitializer(
                 urlApi = "https://api.mistral.ai/v1/chat/completions",
                 description = "Modèle léger pour les conversations et les tâches courantes.",
                 cheminLogo = "/img/logos/mistral.svg",
-                fournisseurIA = mistral
+                fournisseurIA = mistral,
+                prompt = PROMPT_PAR_DEFAUT
             ),
             ModeleIA(
                 nom = "mistral-medium-latest",
@@ -67,7 +70,8 @@ class DataInitializer(
                 urlApi = "https://api.mistral.ai/v1/chat/completions",
                 description = "Modèle plus avancé pour les tâches complexes.",
                 cheminLogo = "/img/logos/mistral.svg",
-                fournisseurIA = mistral
+                fournisseurIA = mistral,
+                prompt = PROMPT_PAR_DEFAUT
             )
         )
 
@@ -75,6 +79,12 @@ class DataInitializer(
         modeles
             .filterNot { modeleIADAO.existsByNom(it.nom) }
             .forEach { modeleIADAO.save(it) }
+
+        // Renseigne le prompt des modèles déjà en base qui n'en ont pas encore
+        modeleIADAO.findAll().filter { it.prompt.isNullOrBlank() }.forEach {
+            it.prompt = PROMPT_PAR_DEFAUT
+            modeleIADAO.save(it)
+        }
 
         // Corrige les logos des modèles déjà en base (anciens chemins /img/*.png)
         val existants = modeleIADAO.findAll().associateBy { it.nom }
@@ -86,5 +96,10 @@ class DataInitializer(
                     modeleIADAO.save(it)
                 }
         }
+    }
+
+    companion object {
+        const val PROMPT_PAR_DEFAUT =
+            "Tu es DaVinci Bot, l'assistant des élèves du lycée. Réponds en français, de façon claire et pédagogique."
     }
 }

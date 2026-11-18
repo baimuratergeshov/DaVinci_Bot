@@ -19,5 +19,8 @@ class ModeleIA(
     var description: String,
     var cheminLogo: String,
     @ManyToOne(optional = false)
-    var fournisseurIA: FournisseurIA
+    var fournisseurIA: FournisseurIA,
+    // Instructions système envoyées à l'IA avant chaque conversation (rôle, ton, contraintes...)
+    @Column(columnDefinition = "TEXT")
+    var prompt: String? = null
 )
